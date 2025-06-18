@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-05-26 Mon 20:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Intent Factored Generation</title>
+<meta name="author" content="Uljad Berdica" />
+<meta name="description" content="Intent Factored Generation" />
+<meta name="keywords" content="homepage, website, research, AI" />
+<meta name="generator" content="Org Mode" />
+<link rel="icon" type="image/png" href="imgs/IFG_icon.png">
+<link rel="apple-touch-icon" href="imgs/IFG_icon.png">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+<link rel="stylesheet" type="text/css" href="utils/style.css"/>
+<link rel="stylesheet" type="text/css" href="utils/bootstrap.min.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+<script src="utils/app.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<div id="main" class="container">
+
+<p>
+<div class="row"><h2 class="col-md-12 text-center"><strong><font size="+4r">Intent Factored Generation: Unleashing the Diversity in Your Language Model</font></strong></h2></div><br />
+</p>
+
+
+<div class="row"> <div class="col-md-12 text-center">
+<ul class="org-ul list-inline" style="margin: 20px 0;">
+  <li style="margin: 0 30px;"><image src="imgs/flair_logo.png" height="48px"><br /></li>
+  <li style="margin: 0 30px;"><image src="imgs/bbc_logo.png" height="48px"><br /></li>
+  <li style="margin: 0 30px;"><image src="imgs/oxford_logo.png" height="48px"><br /></li>  
+</ul>
+</div> </div>
+
+
+<div class="row"> <div class="col-md-12 text-center">
+<ul class="org-ul list-inline">
+<li>Eltayeb Ahmed<sup>1,*</sup><br /></li>
+<li>Uljad Berdica<sup>1,*</sup><br /></li>
+<li>Martha Elliott<sup>2,*</sup><br /></li>
+<li>Danijela Horak<sup>2,*</sup><br /></li>
+<li>Jakob N. Foerster<sup>1,*</sup><br /></li>
+</ul>
+</div> </div>
+
+
+<div class="row"> <div class="col-md-12 text-center"><font size="+2">
+<ul class="org-ul list-inline">
+<li>FLAIR, University of Oxford<sup>1</sup><br /></li>
+<li>BBC Research & Development<sup>2</sup><br /></li>
+</ul>
+</font></div> </div>
+
+<div class="row"> <div class="col-md-12 text-center">
+<p><small>* Equal contribution</small></p>
+</div> </div>
+
+
+<div class="row"> <div class="col-md-4 col-md-offset-4 text-center">
+<ul class="org-ul nav nav-pills nav-justified">
+<li><a href="https://arxiv.org/pdf/2506.09659"><image src="imgs/thumbnail.png" height="60px"><h4><strong>Paper</strong></h4></a><br /></li>
+<li><a href="https://github.com/FLAIROx/IFG"><image src="imgs/GitHub-Mark.png" height="60px"><h4><strong>Code</strong></h4></a><br /></li>
+<!-- <li><a href="https://huggingface.co"><image src="imgs/huggingface.svg" height="60px"><h4><strong>Models</strong></h4></a><br /></li> -->
+</ul>
+</div></div>
+
+<div class="row"> <div class="col-md-8 col-md-offset-2">
+
+<div style="text-align: center; margin-top: 5px; margin-bottom: 5px;">
+    <img src="imgs/Intent Factored Generation Teaser Diversity v0 Xlarge.gif" alt="IFG Teaser Diversity" style="max-width: 70%; height: auto;">
+</div>
+
+<div id="outline-container-orgab85ac8" class="outline-3">
+  <h3 id="orgab85ac8">Abstract</h3>
+  <div class="outline-text-3" id="text-orgab85ac8">
+  <p>
+  Obtaining multiple meaningfully diverse, high quality samples from Large Language Models (LLMs) for a fixed prompt remains an open challenge. Current methods for increasing diversity often only operate at the token-level, paraphrasing the same response. This is problematic because it leads to poor exploration on reasoning problems and to unengaging, repetitive conversational agents. To address this we propose Intent Factored Generation (IFG), factorising the sampling process into two stages. First, we sample a semantically dense intent that anchors the sample, e.g., a summary or keywords. Second, we sample the final response conditioning on both the original prompt and the intent from the first stage. This factorisation allows us to use a higher temperature during the intent step to promote conceptual diversity, and a lower temperature during the final generation to ensure the outputs are coherent and self-consistent. Additionally, we find that prompting the model to explicitly state its intent for each step of the chain-of-thought before generating the step is beneficial for reasoning tasks. Empirically, we demonstrate that our simple method is highly effective across a diverse set of tasks. We show this method improves both pass@k and Reinforcement Learning from Verifier Feedback (RLVF) on maths and code tasks. For instruction-tuning, we combine IFG with Direct Preference Optimisation to increase conversational diversity without sacrificing reward. Finally, we achieve higher diversity while maintaining the quality of generations on a general language modelling task, using a new dataset of reader comments and news articles that we collect and open-source. In summary, we present a simple method of increasing the sample diversity of LLMs while maintaining performance. This method can be implemented by changing the prompt and varying the temperature during generation, making it easy to integrate into many algorithms for gains across various applications.
+  </p>
+  </div>
+  </div>
+  
+<div style="position:relative;padding-top:56.25%; margin-top: 20px;">
+    <video width="100%" height="100%" controls style="position:absolute;top:0;left:0;width:100%;height:100%;">
+        <source src="imgs/Intent Factored Generation_v2 orig.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+<div id="outline-container-orgbe8b481" class="outline-2">
+<h2 id="orgbe8b481"></h2>
+<div class="outline-text-2" id="text-orgbe8b481">
+</div>
+
+
+
+<div id="outline-container-orgf1b055e" class="outline-4">
+  <h3 id="orgf1b055e">Method</h4>
+<div class="outline-text-4" id="text-orgf1b055e">
+  <p>
+    We characterise LLM responses by <em>intent</em> which represents the semantics, and by <em>phrasing</em>. Typically both of these are latently sampled by the LLM conditioned on the prompt. In IFG we sample the intent explicitly (orange) instead of latently (grey). With IFG sampling, we can sample the intent with a higher temperature than the response to induce semantic diversity while using a lower temperature for the final response to maintain coherence.  </p>
+  <div id="orgd850ae0" class="figure">
+    <p style="text-align: center;"><img src="./imgs/method.png" alt="IFG_method.png" width="100%" /><br />
+    </p>
+  </div>
+  <div id="orgd850ae0" class="figure" style="margin-top: 50px;">
+    <p style="text-align: center;"><img src="./imgs/algo.png" alt="IFG_all_methods.png" width="60%" /><br />
+    </p>
+  </div>
+</div>
+
+
+<div id="outline-container-org77536e4" class="outline-3">
+<h3 id="org77536e4">Relaxed Semantic Entropy</h3>
+<div class="outline-text-3" id="text-org77536e4">
+<p>
+We introduce Relaxed Semantic Entropy (RSE) as a novel metric for measuring semantic diversity in language model generations. While traditional Semantic Entropy uses strict bidirectional entailment to determine semantic similarity, RSE relaxes this constraint to bidirectional similarity, making it more suitable for longer generations where minor differences would otherwise be marked as distinct.
+</p>
+
+<p>
+For a given set of generations \(\mathcal{G}\), we define equivalence classes \(c \in \mathcal{C}\) based on bidirectional similarity judgments from a few-shot prompted language model. Unlike Semantic Entropy, we cannot assume transitivity in our equivalence notion, requiring us to compute all \(n^2\) pairwise comparisons for \(n\) generations.
+</p>
+
+<p>
+The Relaxed Semantic Entropy is computed as:
+</p>
+
+$$\text{RSE}(\mathcal{G}) = -\sum_{c \in \mathcal{C}} \frac{|c|}{|\mathcal{G}|} \log(\frac{|c|}{|\mathcal{G}|})$$
+
+<p>
+where we estimate the probability of each cluster as the number of elements in the cluster normalized by the total number of elements. This provides an unbiased estimator that doesn't depend on generation probabilities, making it suitable for human-generated data where such probabilities are unavailable.
+</p>
+
+<p>
+The computation involves constructing an adjacency matrix \(A\) of size \(|\mathcal{G}| \times |\mathcal{G}|\) where \(A_{ij} = 1\) if and only if both \(M_{sim}(g_i, g_j)\) and \(M_{sim}(g_j, g_i)\) return true. We then extract connected components from this graph to determine equivalence classes.
+</p>
+
+<p>
+To estimate this value we use the following unbiased Monte Carlo integration
+</p>
+
+$$ SE_p(x) \approx -|C|^{-1} \sum_{i=1}^{|C|} \log p(c_i | x)$$
+
+<p>
+  Unlike computing the entropy in token space \(\mathcal{H}(Y | x)\), this metric does not assign high entropy to distributions of \(Y\) that exhibit merely high token-level diversity but have a very similar meaning i.e. use of paraphrases and synonyms. The key advantage of RSE is that it captures semantic diversity without being overly sensitive to minor variations, making it particularly effective for evaluating the diversity of longer text generations while maintaining the conceptual rigor of entropy-based measurements.
+</p>
+</div>
+</div>
+<div id="outline-container-org669e8c5" class="outline-3">
+<h3 id="org669e8c5">Results</h3>
+<div class="outline-text-3" id="text-org669e8c5">
+<p>
+We run a series of experiments to evaluate the effectiveness of IFG.
+</p>
+</div>
+
+
+
+<div id="outline-container-orgf1b055e" class="outline-4">
+  <h4 id="orgf1b055e">Maths Reasoning</h4>
+<div class="outline-text-4" id="text-orgf1b055e">
+  <p>
+    IFG few-shot prompted model achieves higher pass@k than the same model with a vanilla few-shot prompt. In subfigure (b), we show the test accuracy (pass@1) on MATH as a function of STaR iterations conducted on the training set. For all tested model scales (3B, 7B, 14B) and across all iterations, IFG+STaR outperforms STaR alone. The separation is largest in the earlier iterations, which shows that adding IFG improves data efficiency. We also note that as the model size increases, so does the improvement due to IFG. This shows that our method scales well and suggests that IFG will continue to be beneficial for even larger scale models. 
+  </p>
+  <div id="orgd850ae0" class="figure">
+    <p style="text-align: center;"><img src="./imgs/math_res.png" alt="IFG_maths_reasoning.png" width="70%" /><br />
+    </p>
+  </div>
+</div>
+
+<div id="outline-container-orgf1b055e" class="outline-4">
+  <h4 id="orgf1b055e">Code Generation</h4>
+<div class="outline-text-4" id="text-orgf1b055e">
+  <p>
+    This table shows the performance of <code>Qwen-2.5-Coder-32B</code> on LiveCodeBench, both using IFG and without. We see that IFG achieves higher pass@5 and pass@10 than the baseline, solving 5 and 7 more problems respectively. Notably, we see that IFG solves more problems in 5 attempts than the baseline does in 10 attempts. However, IFG slightly underperforms in pass@1 accuracy. This is not surprising; individual solutions are less likely to be correct due to higher entropy, but our method makes sets of repeatedly drawn samples more likely to contain the correct solution.
+    </p>
+  <div id="orgd850ae0" class="figure">
+    <p style="text-align: center;"><img src="./imgs/code_res.png" alt="IFG_code_res.png" width="70%" /><br />
+    </p>
+  </div>
+</div>
+
+<div id="outline-container-orgf1b055e" class="outline-4">
+  <h4 id="orgf1b055e">Instruction Following</h4>
+<div class="outline-text-4" id="text-orgf1b055e">
+  <p>
+    Here we compare DPO to DPO+IFG. We assess the quality of the responses with the reward model we trained, and assess diversity with RSE, for different values of temperature (\(t\) for DPO or \(t_i, t_r\) for DPO+IFG). In subfigure (a), we plot these measurements, with points along the Pareto frontier in bold and connected with dotted lines. We see that for any desired level of diversity, DPO+IFG dominates DPO in terms of reward. 
+    We then take these generations and aggregate them across temperatures for both DPO and DPO+IFG and measure the prevalence of undesirable traits in these generations using the <a href="https://developers.perspectiveapi.com/s/?language=en_US">Perspective API</a>.
+    In subfigure (b), we show the probability that DPO scores higher than DPO+IFG for each negative trait, i.e., the DPO model is more undesirable than DPO+IFG.
+  </p>
+  <div id="orgd850ae0" class="figure">
+    <p style="text-align: center;"><img src="./imgs/DPO.png" alt="DPO_IFG.png" width="80%" /><br />
+    </p>
+  </div>
+</div>
+
+
+<div id="outline-container-orgf1b055e" class="outline-4">
+  <h4 id="orgf1b055e">Language Modelling</h4>
+<div class="outline-text-4" id="text-orgf1b055e">
+  <p>
+    We curate a dataset of news articles and reader comments from <a href="https://www.reddit.com/r/news/">Reddit</a>. We gather over 556k comments on 14k news articles. We collected this data from the <code>r/news</code> subreddit.  </p>
+  <p>
+    We plot measurements of RSE and Coherence measured for different sampling hyperparameter values of IFG, direct generation and Diverse Beam Search (DBS). We highlight points on the Pareto frontier for each method, and we note that for higher given values of RSE, IFG has higher coherence than direct generation. IFG also reaches the global maximum RSE. In subfigure (b), we also show some sample generations from points in each method's respective Pareto frontier. 
+  </p>
+  <div id="orgd850ae0" class="figure">
+    <p style="text-align: center;"><img src="./imgs/reddit.png" alt="IFG_reddit_res.png" width="90%" /><br />
+    </p>
+  </div>
+</div>
+</div>
+
+<div id="outline-container-orgconclusion" class="outline-3">
+<h3 id="orgconclusion">Conclusion</h3>
+<div class="outline-text-3" id="text-orgconclusion">
+<p>
+In conclusion, we present IFG, our simple method for semantically diversifying LLMs by sampling higher temperature intents that summarise responses before sampling them. We empirically demonstrate that out-of-the-box IFG significantly improves performances across many different use-cases, spanning from reasoning tasks such as maths and code to conversational chatbots. We hope this robust performance, paired with the ease of implementation and the low computational overhead, leads to future endeavours applying IFG to algorithms or methods that benefit from diversity such as other RLHF and RLVF variants, language-based tree search and evolutionary algorithms.
+</p>
+</div>
+</div>
+
+<div class="row"><div class="col-md-8 col-md-offset-2">
+<h3>Citation</h3>
+<div class="form-group col-md-10 col-md-offset-1"><textarea id="bibtex" class="form-control" readonly>
+  @article{ahmed2025intent,
+    title={Intent Factored Generation: Unleashing the Diversity in Your Language Model},
+    author={Ahmed, Eltayeb and Berdica, Uljad and Elliott, Martha and Horak, Danijela and Foerster, Jakob N},
+    journal={arXiv preprint arXiv:2506.09659},
+    year={2025}
+  }
+</textarea>
+</div></div>
+</div>
+</div>
+
+</div>
+<div class="row"><div class="col-md-8 col-md-offset-2"><p class="text-justify">
+<br><br>
+The website template was borrowed from <a href="http://easyacademicwebsite.github.io">Easy Academic Website Template</a> and <a href="http://jonbarron.info/">Jon Barron</a>
+</p></div></div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
