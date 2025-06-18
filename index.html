@@ -112,10 +112,10 @@
 </div>
 
 <div id="outline-container-orgab85ac8" class="outline-3">
-  <h3 id="orgab85ac8">Abstract</h3>
+  <h3 id="orgab85ac8">TL;DR</h3>
   <div class="outline-text-3" id="text-orgab85ac8">
   <p>
-  Obtaining multiple meaningfully diverse, high quality samples from Large Language Models (LLMs) for a fixed prompt remains an open challenge. Current methods for increasing diversity often only operate at the token-level, paraphrasing the same response. This is problematic because it leads to poor exploration on reasoning problems and to unengaging, repetitive conversational agents. To address this we propose Intent Factored Generation (IFG), factorising the sampling process into two stages. First, we sample a semantically dense intent that anchors the sample, e.g., a summary or keywords. Second, we sample the final response conditioning on both the original prompt and the intent from the first stage. This factorisation allows us to use a higher temperature during the intent step to promote conceptual diversity, and a lower temperature during the final generation to ensure the outputs are coherent and self-consistent. Additionally, we find that prompting the model to explicitly state its intent for each step of the chain-of-thought before generating the step is beneficial for reasoning tasks. Empirically, we demonstrate that our simple method is highly effective across a diverse set of tasks. We show this method improves both pass@k and Reinforcement Learning from Verifier Feedback (RLVF) on maths and code tasks. For instruction-tuning, we combine IFG with Direct Preference Optimisation to increase conversational diversity without sacrificing reward. Finally, we achieve higher diversity while maintaining the quality of generations on a general language modelling task, using a new dataset of reader comments and news articles that we collect and open-source. In summary, we present a simple method of increasing the sample diversity of LLMs while maintaining performance. This method can be implemented by changing the prompt and varying the temperature during generation, making it easy to integrate into many algorithms for gains across various applications.
+  Obtaining multiple meaningfully diverse, high quality samples from Large Language Models (LLMs) for a fixed prompt remains an open challenge. To address this we propose <b>I</b>ntent <b>F</b>actored <b>G</b>eneration (<b>IFG</b>), factorising the sampling process into two stages. <em>First</em>, we sample a semantically dense intent that anchors the sample, e.g., a summary or keywords. <em>Second</em>, we sample the final response conditioning on both the original prompt and the intent from the first stage. This <u>factorisation</u> allows us to promote conceptual diversity, while ensuring the outputs are coherent. Additionally, we find that prompting the model to explicitly state its intent for each step of the chain-of-thought before generating the step is beneficial for reasoning tasks. We show gain in maths and code rasoning tasks, as well we as in instruction following and general language following where we also introduce a new dataset of reader comments and news articles. IFG can be implemented by changing the prompt and varying the temperature during generation, making it easy to integrate into most algorithms.
   </p>
   </div>
   </div>
@@ -153,12 +153,14 @@
 <h3 id="org77536e4">Relaxed Semantic Entropy</h3>
 <div class="outline-text-3" id="text-org77536e4">
 <p>
-We introduce Relaxed Semantic Entropy (RSE) as a novel metric for measuring semantic diversity in language model generations. While traditional Semantic Entropy uses strict bidirectional entailment to determine semantic similarity, RSE relaxes this constraint to bidirectional similarity, making it more suitable for longer generations where minor differences would otherwise be marked as distinct.
+We introduce <b>R</b>elaxed <b>S</b>emantic <b>E</b>ntropy (<b>RSE</b>) as a novel metric for measuring semantic diversity in language model generations. <b>RSE</b> relaxes the bidirectional entailment constraint of Semantic Entropy to one of <em></em>bidirectional similarity</em>, making it more suitable for longer generations where minor differences would be marked as distinct.
 </p>
 
 <p>
-For a given set of generations \(\mathcal{G}\), we define equivalence classes \(c \in \mathcal{C}\) based on bidirectional similarity judgments from a few-shot prompted language model. Unlike Semantic Entropy, we cannot assume transitivity in our equivalence notion, requiring us to compute all \(n^2\) pairwise comparisons for \(n\) generations.
+For a given set of generations \(\mathcal{G}\), we define equivalence classes \(c \in \mathcal{C}\) based on bidirectional similarity judgments from a few-shot prompted language model \(M_{sim}\). We construct an adjacency matrix \(A\) of size \(|\mathcal{G}| \times |\mathcal{G}|\) where \(A_{ij} = 1\) if and only if both \(M_{sim}(g_i, g_j)\) and \(M_{sim}(g_j, g_i)\) return true. We then extract connected components to determine <em>equivalence classes</em>.
 </p>
+
+<!-- Unlike Semantic Entropy, we <em>cannot</em> assume transitivity in our equivalence notion, requiring us to compute all \(n^2\) pairwise comparisons for \(n\) generations. -->
 
 <p>
 The Relaxed Semantic Entropy is computed as:
@@ -167,22 +169,18 @@ The Relaxed Semantic Entropy is computed as:
 $$\text{RSE}(\mathcal{G}) = -\sum_{c \in \mathcal{C}} \frac{|c|}{|\mathcal{G}|} \log(\frac{|c|}{|\mathcal{G}|})$$
 
 <p>
-where we estimate the probability of each cluster as the number of elements in the cluster normalized by the total number of elements. This provides an unbiased estimator that doesn't depend on generation probabilities, making it suitable for human-generated data where such probabilities are unavailable.
+where we estimate the probability of each cluster as the number of elements in the cluster normalized by the total number of elements. This provides an unbiased estimator that doesn't depend on generation probabilities.
 </p>
 
-<p>
-The computation involves constructing an adjacency matrix \(A\) of size \(|\mathcal{G}| \times |\mathcal{G}|\) where \(A_{ij} = 1\) if and only if both \(M_{sim}(g_i, g_j)\) and \(M_{sim}(g_j, g_i)\) return true. We then extract connected components from this graph to determine equivalence classes.
-</p>
-
-<p>
+<!-- <p>
 To estimate this value we use the following unbiased Monte Carlo integration
 </p>
 
-$$ SE_p(x) \approx -|C|^{-1} \sum_{i=1}^{|C|} \log p(c_i | x)$$
+$$ SE_p(x) \approx -|C|^{-1} \sum_{i=1}^{|C|} \log p(c_i | x)$$ -->
 
-<p>
+<!-- <p>
   Unlike computing the entropy in token space \(\mathcal{H}(Y | x)\), this metric does not assign high entropy to distributions of \(Y\) that exhibit merely high token-level diversity but have a very similar meaning i.e. use of paraphrases and synonyms. The key advantage of RSE is that it captures semantic diversity without being overly sensitive to minor variations, making it particularly effective for evaluating the diversity of longer text generations while maintaining the conceptual rigor of entropy-based measurements.
-</p>
+</p> -->
 </div>
 </div>
 <div id="outline-container-org669e8c5" class="outline-3">
@@ -253,7 +251,7 @@ We run a series of experiments to evaluate the effectiveness of IFG.
 <h3 id="orgconclusion">Conclusion</h3>
 <div class="outline-text-3" id="text-orgconclusion">
 <p>
-In conclusion, we present IFG, our simple method for semantically diversifying LLMs by sampling higher temperature intents that summarise responses before sampling them. We empirically demonstrate that out-of-the-box IFG significantly improves performances across many different use-cases, spanning from reasoning tasks such as maths and code to conversational chatbots. We hope this robust performance, paired with the ease of implementation and the low computational overhead, leads to future endeavours applying IFG to algorithms or methods that benefit from diversity such as other RLHF and RLVF variants, language-based tree search and evolutionary algorithms.
+Here we provided your with a simple taste of our method and its wide applicability! Please go <a href="https://arxiv.org/abs/2506.09659">here</a> to read the paper for more information. We hope these results and ease of implementation lead to future endeavours applying IFG to more algorithms and methods.
 </p>
 </div>
 </div>
